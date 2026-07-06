@@ -298,6 +298,13 @@
   <div class="viewer" id="viewer">
     <div class="hint">Drag to rotate · scroll to zoom · right-drag to pan</div>
   </div>
+
+  <h3 class="subhead">Cut Sheet</h3>
+  <div class="design">
+    <div class="frame frame--full">
+      <img loading="lazy" src="cutsheet_sections.svg" alt="Cut sheet sections">
+    </div>
+  </div>
 </main>
 
 <footer>
@@ -447,7 +454,7 @@
 
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
     const fov = camera.fov * Math.PI / 180;
-    const dist = (maxDim / (2 * Math.tan(fov / 2))) * 1.6;
+    const dist = (maxDim / (2 * Math.tan(fov / 2))) * 1.05;
     camera.near = dist / 100;
     camera.far = dist * 100;
     camera.position.set(dist * 0.9, dist * 0.7, dist * 0.9);
