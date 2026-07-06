@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bench Design Precedents</title>
+<title>Bench Design</title>
 <style>
   :root {
     --bg: #f6f3ed;
@@ -124,6 +124,13 @@
   }
   .frame--full { aspect-ratio: auto; }
   .frame--full img { height: auto; object-fit: contain; }
+  .subhead {
+    margin: 1.6rem 0 .8rem;
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
   .blurb {
     margin: 0 0 1.1rem;
     max-width: 60ch;
@@ -260,8 +267,8 @@
 </head>
 <body>
 <header>
-  <h1>Bench Design Precedents</h1>
-  <p>Reference images for a DIY farm bench to build together in a workshop with adults and kids.</p>
+  <h1>Bench Design</h1>
+  <p>Designing a simple farm bench to be constructed by kids and adults together.</p>
 </header>
 
 <main>
@@ -270,14 +277,15 @@
 
   <h2 class="section-title">Narrowing…</h2>
   <div class="row" id="narrowRow"></div>
-  <div class="design" id="design"></div>
 
-  <h2 class="section-title">3D Model</h2>
+  <h2 class="section-title">Final Design</h2>
+  <div class="design" id="design"></div>
   <p class="blurb">
     The top of the bench is <strong>42&Prime; long</strong>, <strong>22&Prime; wide</strong>, and <strong>17&Prime; high</strong>.
     In total it requires <strong>six 2&times;4s</strong>. Building just the frame requires
     only <strong>three 2&times;4s</strong> (if we found other wood to replace the top slats).
   </p>
+  <h3 class="subhead">3D Model</h3>
   <div class="viewer-tabs" id="viewerTabs">
     <button data-model="assembled" class="active">Assembled</button>
     <button data-model="exploded">Exploded</button>
