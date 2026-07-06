@@ -125,9 +125,12 @@
   .frame--full { aspect-ratio: auto; }
   .frame--full img { height: auto; object-fit: contain; }
   .design-hero {
-    max-width: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
     margin-bottom: 1.3rem;
   }
+  .design-hero .card { flex: 1 1 260px; max-width: 320px; }
   /* Smaller design-image grid */
   .design-grid {
     display: grid;
@@ -294,20 +297,25 @@
   <h2 class="section-title">Final Design</h2>
   <div class="design-hero">
     <div class="card">
-      <div class="frame frame--full">
+      <div class="frame frame--tile">
         <img loading="lazy" src="benches/designs/bench3.png" alt="Bench render">
+      </div>
+    </div>
+    <div class="card">
+      <div class="frame frame--tile">
+        <img loading="lazy" src="benches/designs/bench3_dims.png" alt="Dimensions">
       </div>
     </div>
   </div>
   <p class="blurb">
     The top of the bench is <strong>42&Prime; long</strong>, <strong>22&Prime; wide</strong>, and <strong>17&Prime; high</strong>.
-    In total it requires <strong>six 2&times;4s</strong>. Building just the frame requires
-    only <strong>three 2&times;4s</strong> (if we found other wood to replace the top slats).
+    In total this design requires <strong>six 2&times;4s</strong>, at an approximate cost of $30. If we were to build the top 'slats' using found/scrap wood, we could build the supporting frame using only 
+    <strong>three 2&times;4s</strong>, for about $15.
   </p>
   <div class="design-grid">
-    <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench3_dims.png" alt="Dimensions"></div>
     <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench_topview.png" alt="Top view"></div>
     <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench_below.png" alt="Underside view"></div>
+    <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench3_labeled.png" alt="Labeled view"></div>
     <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench_explode.png" alt="Exploded view"></div>
     <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench_expode2.png" alt="Exploded view (alt)"></div>
   </div>
