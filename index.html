@@ -103,6 +103,88 @@
     font-size: .9rem;
     min-height: 1.4em;
   }
+  .section-title {
+    margin: 2.2rem 0 1rem;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  .section-title:first-child { margin-top: 0; }
+  /* Narrowing: single horizontal row (scrolls on small screens) */
+  .row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1.1rem;
+    overflow-x: auto;
+    padding-bottom: .4rem;
+  }
+  .row .card { flex: 1 1 0; min-width: 150px; }
+  .design {
+    margin-top: 1.4rem;
+    max-width: 620px;
+  }
+  .frame--full { aspect-ratio: auto; }
+  .frame--full img { height: auto; object-fit: contain; }
+  /* 3D viewer */
+  .viewer-tabs {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: .7rem;
+  }
+  .viewer-tabs button {
+    font: inherit;
+    font-size: .9rem;
+    padding: .4rem .95rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .viewer-tabs button:hover { border-color: var(--accent); }
+  .viewer-tabs button.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .viewer {
+    position: relative;
+    width: 100%;
+    height: clamp(320px, 60vh, 520px);
+    background: #ece6db;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    touch-action: none;
+  }
+  .viewer canvas { display: block; }
+  .viewer .hint {
+    position: absolute;
+    left: 0; right: 0; bottom: .6rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: .8rem;
+    pointer-events: none;
+  }
+  .viewer .msg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: .9rem;
+    line-height: 1.5;
+  }
+  .viewer .msg code {
+    background: #ded6c7;
+    padding: .1rem .35rem;
+    border-radius: 4px;
+    font-size: .85em;
+  }
   /* Lightbox */
   .lightbox {
     position: fixed;
@@ -176,7 +258,21 @@
 </header>
 
 <main>
+  <h2 class="section-title">Precedents</h2>
   <div class="grid" id="grid"></div>
+
+  <h2 class="section-title">Narrowing…</h2>
+  <div class="row" id="narrowRow"></div>
+  <div class="design" id="design"></div>
+
+  <h2 class="section-title">3D Model</h2>
+  <div class="viewer-tabs" id="viewerTabs">
+    <button data-model="assembled" class="active">Assembled</button>
+    <button data-model="exploded">Exploded</button>
+  </div>
+  <div class="viewer" id="viewer">
+    <div class="hint">Drag to rotate · scroll to zoom · right-drag to pan</div>
+  </div>
 </main>
 
 <footer>
@@ -205,41 +301,60 @@
   const captions = images.map(() => ""); // fill in later
 
   const base = "benches/precedents/";
-  const grid = document.getElementById("grid");
 
-  images.forEach((file, i) => {
-    const n = i + 1;
+  // Build a gallery card. `full` shows the whole image uncropped.
+  function makeCard(src, badge, label, caption, full) {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <div class="frame" data-index="${i}">
-        <span class="badge">${n}</span>
-        <img loading="lazy" src="${base}${encodeURIComponent(file)}" alt="Bench precedent ${n}">
+      <div class="frame${full ? " frame--full" : ""}">
+        <span class="badge">${badge}</span>
+        <img loading="lazy" src="${src}" alt="${label}">
       </div>
       <div class="caption">
-        <div class="num">Design ${n}</div>
-        <div class="text">${captions[i] || "&nbsp;"}</div>
+        <div class="num">${label}</div>
+        <div class="text">${caption || "&nbsp;"}</div>
       </div>`;
-    grid.appendChild(card);
+    return card;
+  }
+
+  // Precedents grid
+  const grid = document.getElementById("grid");
+  images.forEach((file, i) => {
+    grid.appendChild(makeCard(base + encodeURIComponent(file), i + 1, "Precedent #" + (i + 1), captions[i]));
   });
 
-  // Lightbox
+  // Narrowing: repeat precedents 2, 4, 5 in a single row, then the first design.
+  const narrowRow = document.getElementById("narrowRow");
+  [2, 4, 5].forEach(n => {
+    narrowRow.appendChild(makeCard(base + encodeURIComponent(images[n - 1]), n, "Precedent #" + n, ""));
+  });
+  document.getElementById("design")
+    .appendChild(makeCard("benches/designs/bench1.jpeg", "1", "Design #1", "", true));
+
+  // Lightbox — works across every image on the page, in DOM order.
   const lb = document.getElementById("lightbox");
   const lbImg = document.getElementById("lbImg");
   const lbLabel = document.getElementById("lbLabel");
   let current = 0;
 
+  const slides = Array.from(document.querySelectorAll(".frame")).map((frame, i) => {
+    frame.dataset.idx = i;
+    const img = frame.querySelector("img");
+    return { src: img.getAttribute("src"), label: img.getAttribute("alt") };
+  });
+
   function show(i) {
-    current = (i + images.length) % images.length;
-    lbImg.src = base + encodeURIComponent(images[current]);
-    lbLabel.textContent = "Design " + (current + 1);
+    current = (i + slides.length) % slides.length;
+    lbImg.src = slides[current].src;
+    lbLabel.textContent = slides[current].label;
     lb.classList.add("open");
   }
   function close() { lb.classList.remove("open"); }
 
-  grid.addEventListener("click", e => {
+  document.addEventListener("click", e => {
     const frame = e.target.closest(".frame");
-    if (frame) show(parseInt(frame.dataset.index, 10));
+    if (frame) show(parseInt(frame.dataset.idx, 10));
   });
   document.getElementById("lbClose").addEventListener("click", close);
   document.getElementById("lbPrev").addEventListener("click", e => { e.stopPropagation(); show(current - 1); });
@@ -251,6 +366,129 @@
     else if (e.key === "ArrowLeft") show(current - 1);
     else if (e.key === "ArrowRight") show(current + 1);
   });
+</script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/build/three.module.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+  import * as THREE from "three";
+  import { STLLoader } from "three/addons/loaders/STLLoader.js";
+  import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+  const MODELS = { assembled: "bench3.stl", exploded: "bench3_explode.stl" };
+  const container = document.getElementById("viewer");
+  const tabs = document.getElementById("viewerTabs");
+
+  function showMessage(html) {
+    const m = document.createElement("div");
+    m.className = "msg";
+    m.innerHTML = html;
+    container.appendChild(m);
+  }
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xece6db);
+
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 10000);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8d8474, 0.9));
+  const key = new THREE.DirectionalLight(0xffffff, 1.1);
+  key.position.set(1, 1.4, 1);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.5);
+  fill.position.set(-1, 0.5, -1);
+  scene.add(fill);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+
+  function frameObject(object) {
+    object.updateWorldMatrix(true, true);
+    const box = new THREE.Box3().setFromObject(object);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    object.position.sub(center); // recenter at origin
+
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const fov = camera.fov * Math.PI / 180;
+    const dist = (maxDim / (2 * Math.tan(fov / 2))) * 1.6;
+    camera.near = dist / 100;
+    camera.far = dist * 100;
+    camera.position.set(dist * 0.9, dist * 0.7, dist * 0.9);
+    camera.updateProjectionMatrix();
+    controls.target.set(0, 0, 0);
+    controls.minDistance = dist * 0.3;
+    controls.maxDistance = dist * 4;
+    controls.update();
+  }
+
+  function loadStl(url) {
+    return new Promise((resolve, reject) =>
+      new STLLoader().load(url, resolve, undefined, reject));
+  }
+
+  function makeMesh(geometry) {
+    geometry.computeVertexNormals();
+    return new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({
+      color: 0xc2a878, metalness: 0.05, roughness: 0.8
+    }));
+  }
+
+  // Load both models into one group; toggle visibility so the camera never jumps.
+  const group = new THREE.Group();
+  group.rotation.x = -Math.PI / 2; // CAD Z-up -> three.js Y-up
+  scene.add(group);
+  const meshes = {};
+
+  Promise.all([loadStl(MODELS.assembled), loadStl(MODELS.exploded)])
+    .then(([gA, gE]) => {
+      meshes.assembled = makeMesh(gA);
+      meshes.exploded = makeMesh(gE);
+      meshes.exploded.visible = false;
+      group.add(meshes.assembled, meshes.exploded);
+      frameObject(group); // frame to combined extent (exploded is larger)
+    })
+    .catch(() => {
+      showMessage(
+        "Couldn't load the STL files.<br>Browsers block loading local files when the page is opened directly. " +
+        "Run <code>python3 -m http.server</code> in the repo and open <code>http://localhost:8000/</code> — " +
+        "or view it on GitHub Pages."
+      );
+    });
+
+  tabs.addEventListener("click", e => {
+    const btn = e.target.closest("button");
+    if (!btn || !meshes.assembled) return;
+    const which = btn.dataset.model;
+    meshes.assembled.visible = which === "assembled";
+    meshes.exploded.visible = which === "exploded";
+    tabs.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === btn));
+  });
+
+  function resize() {
+    const w = container.clientWidth, h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+  new ResizeObserver(resize).observe(container);
+
+  (function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  })();
 </script>
 </body>
 </html>
