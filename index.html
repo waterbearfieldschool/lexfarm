@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bench Design</title>
+<title>Benches</title>
 <style>
   :root {
     --bg: #f6f3ed;
@@ -124,6 +124,19 @@
   }
   .frame--full { aspect-ratio: auto; }
   .frame--full img { height: auto; object-fit: contain; }
+  .design-hero {
+    max-width: 300px;
+    margin-bottom: 1.3rem;
+  }
+  /* Smaller design-image grid */
+  .design-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    margin-bottom: 1.2rem;
+  }
+  .frame--tile { aspect-ratio: 4 / 3; background: #f0ebe1; }
+  .frame--tile img { object-fit: contain; padding: .6rem; }
   .subhead {
     margin: 1.6rem 0 .8rem;
     font-size: 1rem;
@@ -267,7 +280,7 @@
 </head>
 <body>
 <header>
-  <h1>Bench Design</h1>
+  <h1>Benches</h1>
   <p>Designing a simple farm bench to be constructed by kids and adults together.</p>
 </header>
 
@@ -279,16 +292,24 @@
   <div class="row" id="narrowRow"></div>
 
   <h2 class="section-title">Final Design</h2>
-  <div class="design" id="design"></div>
+  <div class="design-hero">
+    <div class="card">
+      <div class="frame frame--full">
+        <img loading="lazy" src="benches/designs/bench3.png" alt="Bench render">
+      </div>
+    </div>
+  </div>
   <p class="blurb">
     The top of the bench is <strong>42&Prime; long</strong>, <strong>22&Prime; wide</strong>, and <strong>17&Prime; high</strong>.
     In total it requires <strong>six 2&times;4s</strong>. Building just the frame requires
     only <strong>three 2&times;4s</strong> (if we found other wood to replace the top slats).
   </p>
-  <div class="design">
-    <div class="frame frame--full">
-      <img loading="lazy" src="benches/designs/bench3_dims.png" alt="Bench dimensions">
-    </div>
+  <div class="design-grid">
+    <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench3_dims.png" alt="Dimensions"></div>
+    <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench_topview.png" alt="Top view"></div>
+    <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench_below.png" alt="Underside view"></div>
+    <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench_explode.png" alt="Exploded view"></div>
+    <div class="frame frame--tile"><img loading="lazy" src="benches/designs/bench_expode2.png" alt="Exploded view (alt)"></div>
   </div>
   <h3 class="subhead">3D Model</h3>
   <div class="viewer-tabs" id="viewerTabs">
@@ -361,9 +382,6 @@
   [2, 4, 5].forEach(n => {
     narrowRow.appendChild(makeCard(base + encodeURIComponent(images[n - 1]), n, "Precedent #" + n, ""));
   });
-  document.getElementById("design")
-    .appendChild(makeCard("benches/designs/bench1.jpeg", "1", "Design #1", "", true));
-
   // Lightbox — works across every image on the page, in DOM order.
   const lb = document.getElementById("lightbox");
   const lbImg = document.getElementById("lbImg");
