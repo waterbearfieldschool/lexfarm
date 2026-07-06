@@ -124,6 +124,13 @@
   }
   .frame--full { aspect-ratio: auto; }
   .frame--full img { height: auto; object-fit: contain; }
+  .blurb {
+    margin: 0 0 1.1rem;
+    max-width: 60ch;
+    color: var(--ink);
+    font-size: .98rem;
+  }
+  .blurb strong { color: var(--accent); }
   /* 3D viewer */
   .viewer-tabs {
     display: flex;
@@ -266,6 +273,11 @@
   <div class="design" id="design"></div>
 
   <h2 class="section-title">3D Model</h2>
+  <p class="blurb">
+    The top of the bench is <strong>42&Prime; long</strong>, <strong>22&Prime; wide</strong>, and <strong>17&Prime; high</strong>.
+    In total it requires <strong>six 2&times;4s</strong>. Building just the frame requires
+    only <strong>three 2&times;4s</strong> (if we found other wood to replace the top slats).
+  </p>
   <div class="viewer-tabs" id="viewerTabs">
     <button data-model="assembled" class="active">Assembled</button>
     <button data-model="exploded">Exploded</button>
