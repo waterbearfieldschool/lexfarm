@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forage Fork</title>
+<meta name="description" content="A parametric design for a sawbuck-style browse feeder for the goats at LexFarm, built from 2×4s and 1×4s.">
+<!-- Link preview (WhatsApp, Signal, iMessage, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Forage Fork">
+<meta property="og:description" content="A parametric design for a sawbuck-style browse feeder for the goats at LexFarm, built from 2×4s and 1×4s.">
+<meta property="og:url" content="https://waterbearfieldschool.org/lexfarm/fork/">
+<meta property="og:image" content="https://waterbearfieldschool.org/lexfarm/fork/forage-fork-hero.png">
+<meta property="og:image:width" content="425">
+<meta property="og:image:height" content="420">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Forage Fork">
+<meta name="twitter:description" content="A parametric design for a sawbuck-style browse feeder for the goats at LexFarm, built from 2×4s and 1×4s.">
+<meta name="twitter:image" content="https://waterbearfieldschool.org/lexfarm/fork/forage-fork-hero.png">
+<style>
+  :root {
+    --bg: #f6f3ed;
+    --card: #ffffff;
+    --ink: #2c2723;
+    --muted: #7a7167;
+    --accent: #6b8e5a;
+    --border: #e4ddd1;
+    --shadow: 0 1px 3px rgba(44,39,35,.08), 0 6px 20px rgba(44,39,35,.06);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.2rem 1.25rem 1rem;
+  }
+  header h1 {
+    margin: 0 0 .35rem;
+    font-size: 1.6rem;
+    letter-spacing: -0.01em;
+  }
+  header p {
+    margin: 0 0 .6rem;
+    color: var(--muted);
+    max-width: 60ch;
+  }
+  header p a, .blurb a { color: var(--accent); }
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem 4rem;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+  }
+  .frame {
+    position: relative;
+    background: #efeae1;
+    cursor: zoom-in;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+  .frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .35s ease;
+  }
+  .frame:hover img { transform: scale(1.03); }
+  .caption {
+    padding: .7rem .9rem 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .caption .text {
+    color: var(--muted);
+    font-size: .9rem;
+    min-height: 1.4em;
+  }
+  .section-title {
+    margin: 2.2rem 0 1rem;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  .section-title:first-child { margin-top: 0; }
+  .subhead {
+    margin: 1.6rem 0 .8rem;
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+  .blurb {
+    margin: 0 0 1.1rem;
+    max-width: 60ch;
+    color: var(--ink);
+    font-size: .98rem;
+  }
+  .blurb strong { color: var(--accent); }
+  /* One wide image, uncropped */
+  .feature { max-width: 760px; margin-bottom: 1.2rem; }
+  .frame--full { aspect-ratio: auto; }
+  .frame--full img { height: auto; object-fit: contain; }
+  /* Grid of render tiles */
+  .design-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    margin-bottom: 1.2rem;
+  }
+  .frame--tile { aspect-ratio: 4 / 3; background: #f0ebe1; }
+  .frame--tile img { object-fit: contain; padding: .6rem; }
+  /* Parameters / cut list */
+  table.spec {
+    border-collapse: collapse;
+    margin: 0 0 1.2rem;
+    font-size: .95rem;
+  }
+  table.spec th, table.spec td {
+    text-align: left;
+    padding: .45rem .9rem .45rem 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.spec th { font-weight: 600; white-space: nowrap; }
+  table.spec td.note { color: var(--muted); }
+  code {
+    background: #ece6db;
+    padding: .1rem .35rem;
+    border-radius: 4px;
+    font-size: .88em;
+  }
+  pre.cutlist {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    font-size: .85rem;
+    line-height: 1.55;
+    max-width: 760px;
+  }
+  /* 3D viewer */
+  .viewer {
+    position: relative;
+    width: 100%;
+    height: clamp(320px, 60vh, 520px);
+    background: #ece6db;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    touch-action: none;
+  }
+  .viewer canvas { display: block; }
+  .viewer .hint {
+    position: absolute;
+    left: 0; right: 0; bottom: .6rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: .8rem;
+    pointer-events: none;
+  }
+  .viewer .msg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: .9rem;
+    line-height: 1.5;
+  }
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(28,24,20,.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 50;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 82vh;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  }
+  .lightbox .lb-label {
+    position: absolute;
+    bottom: 1.1rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #f6f3ed;
+    font-size: .95rem;
+  }
+  .lightbox .close {
+    position: absolute;
+    top: 1rem;
+    right: 1.1rem;
+    color: #fff;
+    font-size: 2rem;
+    line-height: 1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: .8;
+  }
+  .lightbox .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,.12);
+    color: #fff;
+    border: none;
+    font-size: 1.8rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox .prev { left: .8rem; }
+  .lightbox .next { right: .8rem; }
+  footer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.25rem 3rem;
+    color: var(--muted);
+    font-size: .85rem;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Forage Fork</h1>
+  <p>Goats often like to eat with their heads up, stripping
+  leaves and bark from branches. A <em>forage fork</em> is a simple rack that holds
+  a bundle of cut brush off the ground at browsing height, so it stays clean and
+  the herd can work at it from both sides.</p>
+</header>
+
+<main>
+  <h2 class="section-title">The precedent</h2>
+  <p class="blurb">
+    There's already a forage fork in the <a href="https://goodwinhillgoats.com/">Goodwin Hill Goats</a> goatyard, built from two
+    sawbuck-style X-frames, rails along the inside of the arms to cradle the brush,
+    and a board underneath to keep the whole thing from folding up.  This design already works nicely, so we'll mostly jus tplan to replicate it at <a href="https://lexfarm.org/">LexFarm</a>!
+  </p>
+  <div class="feature">
+    <div class="card">
+      <div class="frame frame--full">
+        <img src="photo-goatyard.jpg" alt="The existing forage fork in the goatyard at LexFarm">
+      </div>
+      <div class="caption"><div class="text">The forage fork already in use in the goatyard at Goodwin Hill Goats</div></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">The Design</h2>
+  <p class="blurb">
+  <div class="design-grid">
+    <div class="card">
+      <div class="frame frame--tile"><img loading="lazy" src="views/three-quarter.png" alt="Forage fork, three-quarter view"></div>
+      <div class="caption"><div class="text">Three-quarter view.</div></div>
+    </div>
+    <div class="card">
+      <div class="frame frame--tile"><img loading="lazy" src="views/end.png" alt="Forage fork, end elevation"></div>
+      <div class="caption"><div class="text">End on — the X and its trough.</div></div>
+    </div>
+    <div class="card">
+      <div class="frame frame--tile"><img loading="lazy" src="views/side.png" alt="Forage fork, side elevation"></div>
+      <div class="caption"><div class="text">Side on — four rails and the stop.</div></div>
+    </div>
+    <div class="card">
+      <div class="frame frame--tile"><img loading="lazy" src="views/branches.png" alt="Forage fork loaded with branches"></div>
+      <div class="caption"><div class="text">Loaded with brush.</div></div>
+    </div>
+  </div>
+
+  <h3 class="subhead">Parts</h3>
+  <p class="blurb">
+    <strong>Four 2&times;4 legs</strong>, bolted face-to-face in pairs to make the two
+    crosses. <strong>Four 1&times;4 cradle rails</strong> run along the <em>inside</em>
+    faces of the arms — an upper pair near the tops, and a lower pair down in the crook
+    of the V. And <strong>one 2&times;4 stop</strong> under the crossings.
+  </p>
+  
+
+  
+
+  <h3 class="subhead">3D model</h3>
+  <p class="blurb">You can turn the design around below.</p>
+  <div class="viewer" id="viewer">
+    <div class="hint">Drag to rotate · scroll to zoom · right-drag to pan</div>
+  </div>
+  
+</main>
+
+<footer>
+  Lexfarm · forage fork
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="nav prev" id="lbPrev" aria-label="Previous">&#8249;</button>
+  <img id="lbImg" src="" alt="">
+  <button class="nav next" id="lbNext" aria-label="Next">&#8250;</button>
+  <div class="lb-label" id="lbLabel"></div>
+</div>
+
+<script>
+  // Lightbox — works across every image on the page, in DOM order.
+  const lb = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lbImg");
+  const lbLabel = document.getElementById("lbLabel");
+  let current = 0;
+
+  const slides = Array.from(document.querySelectorAll(".frame")).map((frame, i) => {
+    frame.dataset.idx = i;
+    const img = frame.querySelector("img");
+    return { src: img.getAttribute("src"), label: img.getAttribute("alt") };
+  });
+
+  function show(i) {
+    current = (i + slides.length) % slides.length;
+    lbImg.src = slides[current].src;
+    lbLabel.textContent = slides[current].label;
+    lb.classList.add("open");
+  }
+  function close() { lb.classList.remove("open"); }
+
+  document.addEventListener("click", e => {
+    const frame = e.target.closest(".frame");
+    if (frame) show(parseInt(frame.dataset.idx, 10));
+  });
+  document.getElementById("lbClose").addEventListener("click", close);
+  document.getElementById("lbPrev").addEventListener("click", e => { e.stopPropagation(); show(current - 1); });
+  document.getElementById("lbNext").addEventListener("click", e => { e.stopPropagation(); show(current + 1); });
+  lb.addEventListener("click", e => { if (e.target === lb) close(); });
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowLeft") show(current - 1);
+    else if (e.key === "ArrowRight") show(current + 1);
+  });
+</script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "../vendor/three/build/three.module.js",
+    "three/addons/": "../vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+  import * as THREE from "three";
+  import { STLLoader } from "three/addons/loaders/STLLoader.js";
+  import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+  const MODEL = "forage-fork.stl";
+  const container = document.getElementById("viewer");
+
+  function showMessage(html) {
+    const m = document.createElement("div");
+    m.className = "msg";
+    m.innerHTML = html;
+    container.appendChild(m);
+  }
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xece6db);
+
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 10000);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8d8474, 0.9));
+  const key = new THREE.DirectionalLight(0xffffff, 1.1);
+  key.position.set(1, 1.4, 1);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.5);
+  fill.position.set(-1, 0.5, -1);
+  scene.add(fill);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+
+  function frameObject(object) {
+    object.updateWorldMatrix(true, true);
+    const box = new THREE.Box3().setFromObject(object);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    object.position.sub(center); // recenter at origin
+
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const fov = camera.fov * Math.PI / 180;
+    const dist = (maxDim / (2 * Math.tan(fov / 2))) * 1.05;
+    camera.near = dist / 100;
+    camera.far = dist * 100;
+    camera.position.set(dist * 0.9, dist * 0.7, dist * 0.9);
+    camera.updateProjectionMatrix();
+    controls.target.set(0, 0, 0);
+    controls.minDistance = dist * 0.3;
+    controls.maxDistance = dist * 4;
+    controls.update();
+  }
+
+  const group = new THREE.Group();
+  group.rotation.x = -Math.PI / 2; // CAD Z-up -> three.js Y-up
+  scene.add(group);
+
+  new STLLoader().load(MODEL, geometry => {
+    geometry.computeVertexNormals();
+    group.add(new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({
+      color: 0xc2a878, metalness: 0.05, roughness: 0.8
+    })));
+    frameObject(group);
+  }, undefined, () => {
+    showMessage(
+      "Couldn't load the STL file.<br>Browsers block loading local files when the page is opened directly. " +
+      "Run <code>python3 -m http.server</code> in the repo and open <code>http://localhost:8000/</code> — " +
+      "or view it on GitHub Pages."
+    );
+  });
+
+  function resize() {
+    const w = container.clientWidth, h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+  new ResizeObserver(resize).observe(container);
+
+  (function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  })();
+</script>
+</body>
+</html>
